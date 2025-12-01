@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
+import Header from "@/components/layout/Header";
+import CustomCursor from "@/components/CustomCursor";
+import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,7 +29,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} antialiased`}>
-        {children}
+        <LanguageProvider>
+          {/* Skip to main content link for keyboard accessibility */}
+          <a href="#main-content" className="skip-link">
+            Skip to main content
+          </a>
+          <CustomCursor />
+          <Header />
+          <main id="main-content" className="pt-16">
+            {children}
+          </main>
+        </LanguageProvider>
       </body>
     </html>
   );

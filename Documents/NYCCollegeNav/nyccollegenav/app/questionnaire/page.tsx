@@ -6,9 +6,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import type { QuestionnaireAnswers, CitizenshipStatus } from '@/lib/utils/router-logic';
+import { useTranslation } from '@/lib/i18n/useTranslation';
 
 export default function QuestionnairePage() {
   const router = useRouter();
+  const { t } = useTranslation();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Partial<QuestionnaireAnswers>>({
     preferredLanguage: 'en'
@@ -17,49 +19,49 @@ export default function QuestionnairePage() {
   const questions = [
     {
       id: 'citizenship',
-      question: 'What is your citizenship or immigration status?',
-      description: 'This helps us find the right financial aid programs for you. Your information is private.',
+      question: t('question.citizenship.title'),
+      description: t('question.citizenship.description'),
       options: [
-        { value: 'citizen', label: 'US Citizen', description: 'Born in the US or naturalized citizen' },
-        { value: 'permanent_resident', label: 'Permanent Resident', description: 'Have a Green Card' },
-        { value: 'daca', label: 'DACA Recipient', description: 'Deferred Action for Childhood Arrivals' },
-        { value: 'undocumented', label: 'Undocumented', description: 'No current legal status' },
-        { value: 'other', label: 'Other Status', description: 'Visa holder or other status' }
+        { value: 'citizen', label: t('question.citizenship.citizen'), description: t('question.citizenship.citizen.desc') },
+        { value: 'permanent_resident', label: t('question.citizenship.permanentResident'), description: t('question.citizenship.permanentResident.desc') },
+        { value: 'daca', label: t('question.citizenship.daca'), description: t('question.citizenship.daca.desc') },
+        { value: 'undocumented', label: t('question.citizenship.undocumented'), description: t('question.citizenship.undocumented.desc') },
+        { value: 'other', label: t('question.citizenship.other'), description: t('question.citizenship.other.desc') }
       ]
     },
     {
       id: 'hasSSN',
-      question: 'Do you have a Social Security Number?',
-      description: 'Some aid programs require this, but not all.',
+      question: t('question.ssn.title'),
+      description: t('question.ssn.description'),
       options: [
-        { value: 'true', label: 'Yes', description: 'I have a Social Security Number' },
-        { value: 'false', label: 'No', description: 'I do not have a Social Security Number' }
+        { value: 'true', label: t('question.ssn.yes'), description: t('question.ssn.yes.desc') },
+        { value: 'false', label: t('question.ssn.no'), description: t('question.ssn.no.desc') }
       ]
     },
     {
       id: 'nyHighSchool',
-      question: 'Did you attend or are you currently attending a New York high school?',
-      description: 'NY State offers special programs for NY high school students.',
+      question: t('question.nyHighSchool.title'),
+      description: t('question.nyHighSchool.description'),
       options: [
-        { value: 'true', label: 'Yes', description: 'I attend or graduated from a NY high school' },
-        { value: 'false', label: 'No', description: 'I attend or graduated from a school outside NY' }
+        { value: 'true', label: t('question.nyHighSchool.yes'), description: t('question.nyHighSchool.yes.desc') },
+        { value: 'false', label: t('question.nyHighSchool.no'), description: t('question.nyHighSchool.no.desc') }
       ]
     },
     {
       id: 'familySituation',
-      question: 'What is your current living situation?',
-      description: 'This helps us understand what documents you might need.',
+      question: t('question.familySituation.title'),
+      description: t('question.familySituation.description'),
       options: [
-        { value: 'parents', label: 'Living with Parents', description: 'I live with one or both parents' },
-        { value: 'guardian', label: 'Living with Guardian', description: 'I live with a legal guardian' },
-        { value: 'independent', label: 'Living Independently', description: 'I live on my own or with roommates' },
-        { value: 'homeless', label: 'Experiencing Homelessness', description: 'Shelter, temporary housing, or unstable housing' }
+        { value: 'parents', label: t('question.familySituation.parents'), description: t('question.familySituation.parents.desc') },
+        { value: 'guardian', label: t('question.familySituation.guardian'), description: t('question.familySituation.guardian.desc') },
+        { value: 'independent', label: t('question.familySituation.independent'), description: t('question.familySituation.independent.desc') },
+        { value: 'homeless', label: t('question.familySituation.homeless'), description: t('question.familySituation.homeless.desc') }
       ]
     },
     {
       id: 'preferredLanguage',
-      question: 'What language do you prefer?',
-      description: 'We can provide help in your preferred language.',
+      question: t('question.language.title'),
+      description: t('question.language.description'),
       options: [
         { value: 'en', label: 'English' },
         { value: 'es', label: 'Español (Spanish)' },
@@ -112,15 +114,15 @@ export default function QuestionnairePage() {
       <div className="mx-auto max-w-2xl">
         {/* Header */}
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-blue-700">NYCCollegeNav</h1>
-          <p className="mt-2 text-gray-600">Find your path to financial aid</p>
+          <h1 className="text-3xl font-bold text-blue-700">{t('questionnaire.title')}</h1>
+          <p className="mt-2 text-gray-600">{t('questionnaire.subtitle')}</p>
         </div>
 
         {/* Progress */}
         <div className="mb-8">
           <div className="mb-2 flex justify-between text-sm text-gray-600">
-            <span>Question {currentQuestion + 1} of {questions.length}</span>
-            <span>{Math.round(progress)}% Complete</span>
+            <span>{t('questionnaire.question', { current: String(currentQuestion + 1), total: String(questions.length) })}</span>
+            <span>{t('questionnaire.complete', { percent: String(Math.round(progress)) })}</span>
           </div>
           <Progress value={progress} />
         </div>
@@ -153,18 +155,17 @@ export default function QuestionnairePage() {
             variant="outline"
             onClick={handleBack}
           >
-            Back
+            {t('questionnaire.back')}
           </Button>
           <div className="text-sm text-gray-600">
-            <p>Your data is private and secure</p>
+            <p>{t('questionnaire.privacy')}</p>
           </div>
         </div>
 
         {/* Help Text */}
         <div className="mt-8 rounded-lg bg-blue-50 p-6 text-center">
           <p className="text-sm text-gray-700">
-            <strong>Need help?</strong> These questions help us match you with the right financial aid programs.
-            There are no wrong answers - just choose what fits your situation best.
+            <strong>{t('questionnaire.helpTitle')}</strong> {t('questionnaire.helpText')}
           </p>
         </div>
       </div>

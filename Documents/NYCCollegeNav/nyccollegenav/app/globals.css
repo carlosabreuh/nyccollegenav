@@ -18,10 +18,82 @@
   --font-mono: var(--font-geist-mono);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Enhanced focus indicators for keyboard navigation (ADA compliance) */
+*:focus-visible {
+  outline: 3px solid #3B82F6;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid #3B82F6;
+  outline-offset: 2px;
+}
+
+/* Skip to main content link for keyboard users (ADA compliance) */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--primary);
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  z-index: 10000;
+  border-radius: 0 0 4px 0;
+  font-weight: 600;
+}
+
+.skip-link:focus {
+  top: 0;
+  outline: 3px solid #FFF;
+  outline-offset: 2px;
+}
+
+/* Custom cursor - optimized for performance */
+.cursor {
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgba(59, 130, 246, 0.6);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s ease, height 0.2s ease, border-color 0.2s ease;
+  will-change: transform;
+}
+
+.cursor-hover {
+  width: 48px;
+  height: 48px;
+  border-color: rgba(147, 51, 234, 0.8);
+  background: rgba(147, 51, 234, 0.08);
+}
+
+/* Only hide cursor on desktop */
+@media (min-width: 769px) {
+  body {
+    cursor: none;
+  }
+
+  a, button, input, textarea, select {
+    cursor: none !important;
+  }
 }
 
 /* Mobile-first responsive design */
@@ -29,4 +101,52 @@ body {
   html {
     font-size: 14px;
   }
+}
+
+/* Custom animations for modern feel */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out;
+}
+
+/* Animated blob background - Lumenx.ai inspired */
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+.animation-delay-6000 {
+  animation-delay: 6s;
 }

@@ -27,26 +27,28 @@ export default function CSSProfilePage() {
   const progress = (checkedCount / totalDocs) * 100;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
-      <div className="mx-auto max-w-4xl">
+    <div className="min-h-screen relative overflow-hidden bg-white py-8 px-4">
+      {/* Animated Gradient Background */}
+      <div className="absolute inset-0 -z-10" aria-hidden="true">
+        <div className="absolute top-0 -left-4 w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+        <div className="absolute top-0 -right-4 w-96 h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-8 left-20 w-96 h-96 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-indigo-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-6000"></div>
+      </div>
+
+      <div className="relative mx-auto max-w-4xl">
         {/* Header */}
-        <div className="mb-8">
-          <Link href="/" className="text-blue-700 hover:text-blue-800 flex items-center gap-2 mb-4">
-            <svg className="h-5 w-5" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            Back to Home
-          </Link>
-          <h1 className="text-4xl font-bold text-blue-700 mb-2">CSS Profile Document Checklist</h1>
+        <header className="mb-8">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">CSS Profile Document Checklist</h1>
           <p className="text-lg text-gray-600">
             Everything you need to complete the CSS Profile for private college financial aid
           </p>
-        </div>
+        </header>
 
         {/* Progress Card */}
-        <Card className="mb-8 border-2 border-blue-200">
+        <Card className="mb-8 border-2 border-blue-200" role="region" aria-labelledby="progress-title">
           <CardHeader className="bg-blue-50">
-            <CardTitle className="text-2xl">Your Progress</CardTitle>
+            <CardTitle id="progress-title" className="text-2xl">Your Progress</CardTitle>
             <CardDescription className="text-base">
               Check off items as you gather them
             </CardDescription>
@@ -54,10 +56,17 @@ export default function CSSProfilePage() {
           <CardContent className="pt-6">
             <div className="mb-4">
               <div className="flex justify-between text-sm text-gray-600 mb-2">
-                <span>{checkedCount} of {totalDocs} documents collected</span>
-                <span>{Math.round(progress)}%</span>
+                <span aria-live="polite">{checkedCount} of {totalDocs} documents collected</span>
+                <span aria-live="polite">{Math.round(progress)}%</span>
               </div>
-              <div className="h-4 w-full overflow-hidden rounded-full bg-gray-200">
+              <div
+                className="h-4 w-full overflow-hidden rounded-full bg-gray-200"
+                role="progressbar"
+                aria-valuenow={Math.round(progress)}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-label={`Document collection progress: ${Math.round(progress)} percent complete`}
+              >
                 <div
                   className="h-full bg-green-600 transition-all duration-300"
                   style={{ width: `${progress}%` }}
@@ -65,9 +74,9 @@ export default function CSSProfilePage() {
               </div>
             </div>
             {progress === 100 && (
-              <div className="mt-4 rounded-lg bg-green-50 border-2 border-green-200 p-4">
+              <div className="mt-4 rounded-lg bg-green-50 border-2 border-green-200 p-4" role="status" aria-live="polite">
                 <p className="text-green-800 font-semibold flex items-center gap-2">
-                  <svg className="h-5 w-5" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="h-5 w-5" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   Great! You have everything you need to start your CSS Profile!
@@ -113,15 +122,15 @@ export default function CSSProfilePage() {
         </Card>
 
         {/* Document Checklist */}
-        <div className="space-y-6 mb-8">
+        <section className="space-y-6 mb-8" aria-label="Document checklist">
           {cssProfileDocuments.map((category, categoryIndex) => (
-            <Card key={categoryIndex}>
+            <Card key={categoryIndex} role="region" aria-labelledby={`category-${categoryIndex}-title`}>
               <CardHeader>
-                <CardTitle className="text-xl text-gray-900">{category.category}</CardTitle>
+                <CardTitle id={`category-${categoryIndex}-title`} className="text-xl text-gray-900">{category.category}</CardTitle>
                 <CardDescription className="text-base">{category.description}</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
+                <div className="space-y-3" role="group" aria-label={`${category.category} documents`}>
                   {category.documents.map((doc) => (
                     <div key={doc.id} className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
                       <input
@@ -130,22 +139,23 @@ export default function CSSProfilePage() {
                         checked={checkedItems.has(doc.id)}
                         onChange={() => toggleItem(doc.id)}
                         className="mt-1 h-5 w-5 rounded border-gray-300 text-blue-700 focus:ring-2 focus:ring-blue-700 cursor-pointer"
+                        aria-describedby={`${doc.id}-desc`}
                       />
                       <label htmlFor={doc.id} className="flex-1 cursor-pointer">
                         <div className="flex items-center gap-2">
                           <p className="font-semibold text-gray-900">{doc.name}</p>
                           {doc.required && (
-                            <span className="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-medium">
+                            <span className="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-medium" role="status" aria-label="Required document">
                               Required
                             </span>
                           )}
                           {doc.applicableIf && (
-                            <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-medium">
+                            <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-medium" role="note" aria-label="Conditional document">
                               If applicable
                             </span>
                           )}
                         </div>
-                        <p className="text-sm text-gray-600 mt-1">{doc.description}</p>
+                        <p id={`${doc.id}-desc`} className="text-sm text-gray-600 mt-1">{doc.description}</p>
                         {doc.applicableIf && (
                           <p className="text-xs text-gray-500 mt-1 italic">
                             Needed if: {doc.applicableIf}
@@ -158,7 +168,7 @@ export default function CSSProfilePage() {
               </CardContent>
             </Card>
           ))}
-        </div>
+        </section>
 
         {/* Helpful Tips */}
         <Card className="mb-8 bg-blue-50 border-2 border-blue-200">
@@ -185,21 +195,26 @@ export default function CSSProfilePage() {
         </Card>
 
         {/* Action Buttons */}
-        <div className="flex gap-4 mb-8">
+        <div className="flex gap-4 mb-8" role="group" aria-label="Action buttons">
           <a
             href="https://cssprofile.collegeboard.org/"
             target="_blank"
             rel="noopener noreferrer"
             className="flex-1"
+            aria-label="Start CSS Profile Application on College Board website (opens in new window)"
           >
             <Button size="lg" className="w-full">
               Start CSS Profile Application
-              <svg className="h-4 w-4 ml-2" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="h-4 w-4 ml-2" fill="none" strokeWidth="2" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
               </svg>
             </Button>
           </a>
-          <Button variant="outline" onClick={() => window.print()}>
+          <Button
+            variant="outline"
+            onClick={() => window.print()}
+            aria-label="Print this checklist"
+          >
             Print Checklist
           </Button>
         </div>

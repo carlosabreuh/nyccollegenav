@@ -6,9 +6,11 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { determineApplication, type QuestionnaireAnswers, type ApplicationRecommendation } from '@/lib/utils/router-logic';
+import { useTranslation } from '@/lib/i18n/useTranslation';
 
 export default function ResultsPage() {
   const router = useRouter();
+  const { t } = useTranslation();
   const [recommendation, setRecommendation] = useState<ApplicationRecommendation | null>(null);
   const [answers, setAnswers] = useState<QuestionnaireAnswers | null>(null);
 
@@ -30,7 +32,7 @@ export default function ResultsPage() {
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
           <div className="h-12 w-12 animate-spin rounded-full border-4 border-blue-700 border-t-transparent mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading your personalized plan...</p>
+          <p className="mt-4 text-gray-600">{t('results.loading')}</p>
         </div>
       </div>
     );
@@ -41,15 +43,15 @@ export default function ResultsPage() {
       <div className="mx-auto max-w-3xl">
         {/* Header */}
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-blue-700">NYCCollegeNav</h1>
+          <h1 className="text-3xl font-bold text-blue-700">{t('results.title')}</h1>
         </div>
 
         {/* Success Message */}
         <div className="mb-8 rounded-xl bg-green-50 border-2 border-green-200 p-6 text-center">
           <div className="mb-2 text-4xl">✓</div>
-          <h2 className="text-2xl font-bold text-gray-900">Great News!</h2>
+          <h2 className="text-2xl font-bold text-gray-900">{t('results.success')}</h2>
           <p className="mt-2 text-lg text-gray-700">
-            We found the perfect financial aid program for you.
+            {t('results.foundProgram')}
           </p>
         </div>
 
@@ -65,12 +67,12 @@ export default function ResultsPage() {
             {/* Estimated Aid */}
             <div className="mb-6 text-center rounded-lg bg-green-50 p-6">
               <p className="text-sm font-semibold text-gray-600 uppercase tracking-wide">
-                You Could Receive
+                {t('results.youCouldReceive')}
               </p>
               <p className="text-5xl font-bold text-green-600 mt-2">
                 ${recommendation.estimatedAid.toLocaleString()}
               </p>
-              <p className="text-gray-600 mt-2">in FREE financial aid</p>
+              <p className="text-gray-600 mt-2">{t('results.inFreeAid')}</p>
             </div>
 
             {/* Timeline */}
@@ -79,14 +81,14 @@ export default function ResultsPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <div>
-                <p className="font-semibold text-gray-900">Time to Complete</p>
+                <p className="font-semibold text-gray-900">{t('results.timeToComplete')}</p>
                 <p className="text-gray-600">{recommendation.timeline}</p>
               </div>
             </div>
 
             {/* Next Steps */}
             <div className="mb-6">
-              <h3 className="mb-4 text-xl font-bold text-gray-900">Your Next Steps</h3>
+              <h3 className="mb-4 text-xl font-bold text-gray-900">{t('results.nextSteps')}</h3>
               <div className="space-y-3">
                 {recommendation.nextSteps.map((step, index) => (
                   <div key={index} className="flex gap-3">
@@ -105,7 +107,7 @@ export default function ResultsPage() {
             {recommendation.additionalPrograms && recommendation.additionalPrograms.length > 0 && (
               <div className="rounded-lg border-2 border-yellow-200 bg-yellow-50 p-4">
                 <p className="font-semibold text-gray-900 mb-2">
-                  You may also qualify for:
+                  {t('results.alsoQualify')}
                 </p>
                 <ul className="space-y-2">
                   {recommendation.additionalPrograms.map((program, index) => (
@@ -136,18 +138,18 @@ export default function ResultsPage() {
         <div className="space-y-4 mb-8">
           <Link href="/dashboard" className="block">
             <Button size="lg" className="w-full text-lg py-6">
-              Start My Application
+              {t('results.startApplication')}
             </Button>
           </Link>
           <div className="flex gap-4">
             <Link href="/chat" className="flex-1">
               <Button variant="outline" className="w-full">
-                Get Help from AI Assistant
+                {t('results.getHelp')}
               </Button>
             </Link>
             <Link href="/questionnaire">
               <Button variant="ghost">
-                Start Over
+                {t('results.startOver')}
               </Button>
             </Link>
           </div>
@@ -156,7 +158,7 @@ export default function ResultsPage() {
         {/* Important Information */}
         <Card className="bg-white">
           <CardHeader>
-            <CardTitle className="text-xl">Important Information</CardTitle>
+            <CardTitle className="text-xl">{t('results.importantInfo')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm text-gray-600">
             <div className="flex gap-3">
@@ -164,7 +166,7 @@ export default function ResultsPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <p>
-                <strong>Your data is private.</strong> We never store your Social Security Number or share your information.
+                <strong>{t('results.privacy.title')}</strong> {t('results.privacy.text')}
               </p>
             </div>
             <div className="flex gap-3">
@@ -172,7 +174,7 @@ export default function ResultsPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <p>
-                <strong>This is FREE money.</strong> Grants don&apos;t need to be paid back, unlike loans.
+                <strong>{t('results.freeMoney.title')}</strong> {t('results.freeMoney.text')}
               </p>
             </div>
             <div className="flex gap-3">
@@ -180,7 +182,7 @@ export default function ResultsPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <p>
-                <strong>We&apos;re here to help.</strong> Get assistance anytime from our AI assistant or reach out to a school counselor.
+                <strong>{t('results.support.title')}</strong> {t('results.support.text')}
               </p>
             </div>
           </CardContent>
@@ -188,7 +190,7 @@ export default function ResultsPage() {
 
         {/* Footer */}
         <div className="mt-8 text-center text-sm text-gray-600">
-          <p>Questions? Need help? We&apos;re here for you every step of the way.</p>
+          <p>{t('results.footer')}</p>
         </div>
       </div>
     </div>
